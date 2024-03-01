@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<section class="section-content padding-y bg">
+    <div class="container">
+    
+    <!-- ============================ COMPONENT 1 ================================= -->
+
+    <div class="row">
+        <aside class="col-lg-8">
+            <div class="card">
+                <h5 class="card-header">Billing Address</h5>
+                <div class="card-body">
+                  <p class="card-text mb-2">FullName: Riya BC{{order.full_name}}</p>
+                  <p class="card-text mb-2">Email: riya31@gmail.com{{order.email}}</p>
+                  <p class="card-text mb-2">Phone Number: 9841662194{{order.Phone_number}}</p>
+                  <p class="card-text mb-2">Address: Near Balkumari Bridge, Balkumari{{order.full_address}}</p>
+                  <p class="card-text mb-2">Province: Bagmati{{order.province}}</p>
+                  <p class="card-text mb-2">City: Lalitpur{{order.city}}</p>
+                  <p class="card-text mb-2">Area: Balkumari{{order.area}}</p>
+                  {% if order.order_note %}
+                        <b>Order Note: </b>{{order.order_note}}
+                  {% endif %}
+                </div>
+              </div>
+    
+              <div class="card">
+                <h5 class="card-header">Payment Method</h5>
+                <div class="card-body">
+                    <img src="{% static './images/misc/PayPal.png' %}" alt="payment" height="30">
+                </div>
+              </div>
+    
+              <div class="card">
+                <h5 class="card-header">Review Products</h5>
+            
+                <div class="card-body">
+                   <table class="table table-borderless table-shopping-cart">
+                    <thead class="text-muted">
+                    <tr class="small text-uppercase">
+                      <th scope="col">Product</th>
+                      <th scope="col" width="120">Quantity</th>
+                      <th scope="col" width="120">Price</th>
+                      <!-- <th scope="col" class="text-right" width="200"> </th> -->
+                    </tr>
+                    </thead>
+                    <tbody>
+                
+                        {% comment %} {% for cart_item in cart_items %} {% endcomment %}
+                    <tr>
+                        <td>
+                            <figure class="itemside align-items-center">
+                                    <div class="aside"><img src="{% static 'images/banners/b2.jpg' %}" class="img-sm"></div>
+                                    <figcaption class="info">
+                                        <a href="{{ cart_item.product.get_url }}" class="title text-dark">Chicken Pizza</a>
+                                        
+                                    </figcaption>
+                                </figure>
+                            </td>
+                            <td> 
+                                <!-- col.// -->
+                                <div class="text-center">
+                                    <label for="">1</label>
+                                </div>
+                                          
+                            </td>
+                            <td> 
+                                <div class="price-wrap"> 
+                                    <var class="price">RS.600{{ cart_item.sub_total }}</var> 
+                                    <small class="text-muted">RS.600{{ cart_item.product.price }}  each </small> 
+                                </div> <!-- price-wrap .// -->
+                            </td>
+                            <!-- <td class="text-right"> 
+                            <a href="#" class="btn btn-danger">  <i class="fa fa-trash"></i></a>
+                            </td> -->
+                        </tr>
+                    <tr>
+                        <td>
+                            <figure class="itemside align-items-center">
+                                <div class="aside"><img src="{% static 'images/banners/Steam_Chicken.jpg' %}" class="img-sm"></div>
+                                <figcaption class="info">
+                                    <a href="{{ cart_item.product.get_url }}" class="title text-dark">Chicken Momo</a>
+                                    
+                                </figcaption>
+                            </figure>
+                        </td>
+                        <td> 
+                            <!-- col.// -->
+                            <div class="text-center">
+                                <label for="">2</label>
+                            </div>
+                                      
+                        </td>
+                        <td> 
+                            <div class="price-wrap"> 
+                                <var class="price">RS.400{{ cart_item.sub_total }}</var> 
+                                <small class="text-muted">RS.200{{ cart_item.product.price }}  each </small> 
+                            </div> <!-- price-wrap .// -->
+                        </td>
+                        <!-- <td class="text-right"> 
+                        <a href="#" class="btn btn-danger">  <i class="fa fa-trash"></i></a>
+                        </td> -->
+                    </tr>
+                    
+                    {% comment %} {% endfor %} {% endcomment %}
+                    </tbody>
+                    </table>
+                </div>
+              </div>
+    
+        </aside> <!-- col.// -->
+        <aside class="col-lg-4">
+    
+            <div class="card">
+            <div class="card-body">
+                <dl class="dlist-align">
+                  <dt>Total price:</dt>
+                  <dd class="text-right">RS.1000{{ total }}</dd>
+                </dl>
+                <dl class="dlist-align">
+                  <dt>Vat(13%):</dt>
+                  <dd class="text-right"> RS.130{{ tax }}</dd>
+                </dl>
+                <dl class="dlist-align">
+                  <dt>Total:</dt>
+                  <dd class="text-right text-dark b"><strong>RS.1130{{ grand_total }}</strong></dd>
+                </dl>
+                <hr>
+                <p class="text-center mb-3">
+                    <img src="{% static './images/misc/PayPal.png' %}" height="30">
+                </p>
+                <div id="paypal-button-container">
+
+                </div>
+            </div> <!-- card-body.// -->
+            </div> <!-- card.// -->
+    
+    </aside> <!-- col.// -->
+    
+    
+    </div> <!-- row.// -->
+    
+    <!-- ============================ COMPONENT 1 END .// ================================= -->
+    
+    </div> <!-- container .//  -->
+    </section>
+    <!-- ========================= SECTION CONTENT END// ========================= -->
+ <!-- Paypal -->
+    <script>
+        paypal.Buttons({
+
+
+            createOrder: function(data,actions){
+                return actions.order.create({
+                    purchase_units:[{
+                        amount: {
+                            value: '88.44'
+                        }
+                    }]
+                });
+            },
+
+            onApprove: function(data,actions){
+                return actions.order.capture().then(function(details){
+                    alert('Transaction completed by' + details.payer.name.given_name + '!');
+                });
+            }
+        }).render('#paypal-button-container');
+    </script>
+
+
+{% endblock %}
